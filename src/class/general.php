@@ -1,23 +1,27 @@
 <?php
 
+
 class general{
 
 	protected $table;
-	public $query;
-	public $total;
-	public $error;
+	protected $debug;
+	protected $query;
+	protected $total;
+	protected $error;
+	protected $limit;
 	public $results;
 	
 	function __construct(){
 		$this->table = "";
 		$this->total = 0;
 		$this->query = "";
+		$this->debug = false;
 		$this->error = "No Error";
+		$this->limit = 1;
 	}
-
 	private function makeConnection(){
-		$ll = mysql_connect(baseHosts,baseUser,basePass)or
-		die("Could not connect: " . mysql_error());
+		$ll = @mysql_connect(baseHost,baseUser,basePass)or
+		$this->error("Check your config.php. ");
 		mysql_select_db(baseBase);
 		
 		return $ll;
@@ -26,12 +30,20 @@ class general{
 	private function closeConnection($ll){
 		mysql_close($ll);
 	}
-	
-	public function table($t){
-		$this->table = $t;
+	protected function error($msg){
+		echo "
+			<p style='margin:0 auto; width:80%; margin-top:20px; display:block; text-align:center;background-color:#E92828; font-size:30px; padding:20px 0px; color:white;'>
+				".$msg."
+			</p>
+		";
+		die();
 	}
-	
-	protected function runQuery($queryString){
+	protected function runQuery($queryString, $total = false){
+		
+		if(!strlen($this->table)){
+			$this->error("You must be add table_name<br>example: class->table('table_name');");
+		}
+		
 		$con = $this->makeConnection();
 		
 		$this->query = $queryString;
@@ -41,13 +53,14 @@ class general{
 		if (!$temp) { // pregunta si la consulta se realizo satisfactoriamente.
 			$this->error  = 'Invalid query: ' . mysql_error() . "\n";
 			$this->error .= 'Whole query: ' . $query;
+			if($this->debug) $this->error($this->error);
 			return false;
 		}
 		else{
-			$this->total = mysql_num_rows($temp);
-			if($this->total){
+			if($total) $this->total = mysql_num_rows($temp);
+			if($total){
 				while( $row = mysql_fetch_assoc( $temp)){
-					$results[] = $row; // Inside while loop
+					$results[] = $row;
 				}
 				$this->results = $results;
 			}
@@ -56,6 +69,32 @@ class general{
 		
 		$this->closeConnection($con);
 	}
+	protected function limit(){
+		return $this->limit;
+	}
+	public function setLimit($limit = 1){
+		$this->limit = $limit;
+	}
+	public function debug($debug){
+		$this->debug = $debug;
+	}
+	public function table($t){
+		$this->table = $t;
+	}
+	public function getResults(){
+		return $this->results;
+	}
+	public function getQuery(){
+		return $this->query;
+	}
+	public function getTotal(){
+		return $this->total;
+	}
+	public function getError(){
+		return $this->error;
+	}
+	
+	
 
 }
 

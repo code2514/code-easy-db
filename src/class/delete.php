@@ -1,17 +1,12 @@
 <?php
 
 /*
-	Update class
+	Delete class
 */
 
-
-class update extends general{
+class delete extends general{
 	
-	private $select;
-	private $from; 
 	private $where;
-	private $end;
-	private $set;
 	
 	function __construct(){
 		$this->where = " 1 = 1 ";
@@ -20,7 +15,7 @@ class update extends general{
 	
 	private function makeQuery(){
 		
-		return "UPDATE ".$this->table." SET ".$this->set." WHERE ".$this->where.$this->limit();
+		return "DELETE FROM ".$this->table." WHERE ".$this->where.$this->limit();
 		
 	}
 	
@@ -28,24 +23,15 @@ class update extends general{
 		if(strlen($this->where)) $this->where .= " and ";
 		$this->where .= " ".$condition." ";
 	}
-	public function addSet($key, $value){
-		if($this->total){
-			$this->set .= ", ";
-		}
-		if(gettype($value) == "string") $this->set .= $key." = '".$value."'";
-		else $this->set .= $key." = ".$value;
-		$this->total++;
-	}
 	
 	public function showQuery(){
+		
 		return $this->makeQuery();
+		
 	}
-	
 	public function run(){
 		return $this->runQuery($this->makeQuery());
 	}
-
-	
 	
 }
 

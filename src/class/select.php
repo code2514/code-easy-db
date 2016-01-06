@@ -13,7 +13,7 @@ class select extends general{
 	private $end;
 	
 	function __construct(){
-		$this->select = "*";
+		$this->select = "";
 		$this->from = "";
 		$this->where = " 1 = 1 ";
 		$this->end = "";
@@ -21,18 +21,16 @@ class select extends general{
 
 	private function makeQuery(){
 		
-		$queryString  = "select ".$this->select." ";
+		$queryString  = "select ".(($this->select == "")? "*":$this->select)." ";
 		$queryString .= " from ".$this->table." ";
 		$queryString .= " where ".$this->where." ";
 		
 		return $queryString;
 		
 	}
-	public function select($select){
-		$this->select = $select;
-	}
 	public function addSelect($select){
-		$this->select .= ", ".$select;
+		if(strlen($this->select)) $this->select .= ", ";
+		$this->select .= $select;
 		
 	}
 	public function addCondition($condition){
@@ -46,7 +44,7 @@ class select extends general{
 		
 	}
 	public function run(){
-		return $this->runQuery($this->makeQuery);
+		return $this->runQuery($this->makeQuery(), true);
 	}
 	
 }

@@ -62,7 +62,7 @@ $updateData->addSet("name_field_1", $value1); // Value to change.
 $updateData->addSet("name_field_1", 20);
 $updateData->addSet("name_field_1", "value");
 $updateData->addCondition("alias.field2 = 'name'"); // where condition
-$updateData->limit(2); // Limit number of affected rows, zero get all rows. Default limit 1 for prevents accidentally updates.
+$updateData->setLimit(2); // Limit number of affected rows, zero get all rows. Default limit 1 for prevents accidentally updates.
 $updateData->run();
 
 //After run obtains
