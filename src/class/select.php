@@ -23,7 +23,7 @@ class select extends general{
 		
 		$queryString  = "select ".(($this->select == "")? "*":$this->select)." ";
 		$queryString .= " from ".$this->table." ";
-		$queryString .= " where ".$this->where." ";
+		$queryString .= " where ".$this->where." ".$this->getOrder();
 		
 		return $queryString;
 		

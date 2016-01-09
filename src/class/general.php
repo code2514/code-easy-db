@@ -9,6 +9,8 @@ class general{
 	protected $total;
 	protected $error;
 	protected $limit;
+	protected $order;
+	protected $typeOrder;
 	public $results;
 	
 	function __construct(){
@@ -18,6 +20,8 @@ class general{
 		$this->debug = false;
 		$this->error = "No Error";
 		$this->limit = 1;
+		$this->typeOrder = "ASC";
+		$this->order = "";
 	}
 	private function makeConnection(){
 		$ll = @mysql_connect(baseHost,baseUser,basePass)or
@@ -72,6 +76,20 @@ class general{
 	protected function limit(){
 		return $this->limit;
 	}
+	protected function getOrder(){
+		return (strlen($this->order))? "ORDER BY ".$this->order." ".$this->typeOrder:"";
+	}
+	public function typeOrder($order = "ASC"){
+		if(strtoupper($order) != "ASC" and strtoupper($order) != "DESC"){
+			$this->error  = 'Uknown clause '.$order." in typeOrder, accepted 'ASC' or 'DESC'";
+			if($this->debug) $this->error($this->error);
+		}
+		else $this->typeOrder  strtoupper($order);
+	}
+	public function addOrder($condition){
+		if(strlen($this->order)) $this->order .= ", ";
+		$this->order .= " ".$condition." ";
+	}
 	public function setLimit($limit = 1){
 		$this->limit = $limit;
 	}
@@ -98,4 +116,4 @@ class general{
 
 }
 
-?>
+?> 
