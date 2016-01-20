@@ -83,7 +83,7 @@ $updateData->getError(); // Show error status.
 require("autoload.php");
 
 
-$insertData = new update;
+$insertData = new insert;
 
 $insertData->table("table_name"); // table to insert.
 $insertData->addValue("name_field_1", $value1); // Value to insert.
